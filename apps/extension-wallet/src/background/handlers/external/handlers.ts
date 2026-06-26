@@ -67,8 +67,6 @@ export async function handleRequestAccess(
   // Open approval UX before the MVP auto-approval path.
   void openApprovalWindow(ctx.requestId, 'grant-access');
 
-  // For MVP, auto-approve (in production, wait for user approval)
-
   await addToAllowlist(network, smartAccountId, origin);
 
   return { smartAccountId, network };
