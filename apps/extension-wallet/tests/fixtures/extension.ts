@@ -51,6 +51,14 @@ export const test = base.extend<ExtensionFixtures>({
       );
       await page.goto('/', { waitUntil: 'domcontentloaded' });
       await waitForAppReady(page);
+
+      const landingPattern =
+        state === 'onboarded-unlocked'
+          ? /\/home/
+          : state === 'onboarded-locked'
+            ? /\/unlock/
+            : /\/onboarding/;
+      await page.waitForURL(landingPattern, { timeout: 15_000 });
     });
   },
 

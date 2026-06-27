@@ -4,7 +4,7 @@ This suite is the minimum release-candidate confidence gate for the extension wa
 
 ## Coverage
 
-- Onboarding: create wallet flow reaches `home`
+- Onboarding: welcome screen at `/onboarding` and create-wallet flow starts
 - Lock/Unlock: locked wallet unlocks to `home`
 - Send/Receive: core transfer screens are reachable
 - Session Keys: unlocked access allowed, logged-out access blocked

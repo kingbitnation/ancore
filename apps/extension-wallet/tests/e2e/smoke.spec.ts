@@ -11,7 +11,7 @@ test.describe('Extension release-candidate smoke @smoke', () => {
     await page.goto('/', { waitUntil: 'domcontentloaded' });
     await waitForAppReady(page);
 
-    await page.waitForURL(/\/onboarding/, { timeout: 15_000 });
+    await expect(page).toHaveURL(/\/onboarding/, { timeout: 15_000 });
     await expect(page.getByRole('heading', { name: /Welcome to Ancore/i })).toBeVisible();
     await page.getByRole('button', { name: /Create New Wallet/i }).click();
     await expect(page.getByRole('button', { name: /I've Saved My Recovery Phrase/i })).toBeVisible({
@@ -23,26 +23,27 @@ test.describe('Extension release-candidate smoke @smoke', () => {
     await freezeTime('2026-01-15T10:00:00.000Z');
     await seedWallet('onboarded-unlocked');
 
-    await page.waitForURL(/\/home/, { timeout: 15_000 });
+    await expect(page).toHaveURL(/\/home/, { timeout: 15_000 });
     await expect(page.getByRole('heading', { name: 'Home' })).toBeVisible();
   });
 
   test('locked wallet unlocks and returns to home', async ({ page, seedWallet, freezeTime }) => {
     await freezeTime('2026-01-15T10:00:00.000Z');
     await seedWallet('onboarded-locked');
+    await navigateTo(page, '/');
 
-    await page.waitForURL(/\/unlock/, { timeout: 15_000 });
+    await expect(page).toHaveURL(/\/unlock/, { timeout: 15_000 });
     await page.getByPlaceholder('Enter your password').fill('smoke-pass');
     await page.getByRole('button', { name: /Unlock/i }).click();
 
-    await page.waitForURL(/\/home/, { timeout: 15_000 });
+    await expect(page).toHaveURL(/\/home/, { timeout: 15_000 });
     await expect(page.getByText('Available balance')).toBeVisible();
   });
 
   test('send and receive core screens are reachable', async ({ page, seedWallet, freezeTime }) => {
     await freezeTime('2026-01-15T10:00:00.000Z');
     await seedWallet('onboarded-unlocked');
-    await page.waitForURL(/\/home/, { timeout: 15_000 });
+    await navigateTo(page, '/home');
 
     await page.getByRole('link', { name: /Send funds/i }).click();
     await expect(page).toHaveURL(/\/send/);
@@ -67,7 +68,7 @@ test.describe('Extension release-candidate smoke @smoke', () => {
 
     await expect(page.getByRole('heading', { name: 'Session Keys' })).toBeVisible();
     await expect(page.getByText('Active Keys')).toBeVisible();
-    await expect(page.getByRole('button', { name: /Add session key/i })).toBeVisible();
+    await expect(page.getByRole('button', { name: /Add session key/i }).first()).toBeVisible();
 
     await clearWallet();
     await page.goto('/session-keys', { waitUntil: 'domcontentloaded' });
